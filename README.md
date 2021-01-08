@@ -1,73 +1,35 @@
-## Voyager
+# NexT
 
-Just another jekyll theme. Demo: <http://redvi.github.io/voyager>
+> 精于心，简于形
 
-### Feathures:
+NexT 是由 [Hexo NexT](https://github.com/iissnan/hexo-theme-next) 移植而来的 Jekyll 主题。<!--commit: f951075d9b739d26b42472431995fa68d08796aa-->
 
-All HTML files are compressed (see `_layouts/compress.html`).
+<a href="http://simpleyyt.github.io/jekyll-theme-next/" target="_blank">在线预览 Preview</a> | <a href="http://simpleyyt.com" target="_blank">Yitao's Blog</a> | <a href="http://theme-next.simpleyyt.com" target="_blank">NexT 使用文档</a> |  [English Documentation](README.en.md)
 
-**Post**
+[![Join the chat at https://gitter.im/simpleyyt/jekyll-theme-next](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jekyll-theme-next/lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-All post settings can be changed. Example:
+![NexT Schemes](http://iissnan.com/nexus/next/next-schemes.jpg)
 
-```
----
-layout: post
-bg: '2016/background.jpg'
-title: "Post Heading"
-crawlertitle: "page title"
-summary: "post description"
-date: 2016-06-29
-tags : ['front-end']
-slug: post-url
-author: "Author"
-categories: posts
----
-```
 
-`bg` is a path to background of your article. By default backgrounds are placed in the `assets/images` directory.
+## 浏览器支持 Browser support
 
-**Page**
+![Browser support](http://iissnan.com/nexus/next/browser-support.png)
 
-If page contains `active` tag, it will be show on site menu.
 
-```
----
-layout: page
-title: "About"
-permalink: /about/
-active: about
----
-```
+## 贡献 Contributing
 
-**Archive**
+欢迎提交问题与需求，修复代码。
 
-Archive page is sorting posts by tags. No more than one tag in one post.
 
-Good:
+## 开发 Development
 
-```
-tags : ['front-end']
-```
+NexT 主旨在于简洁优雅且易于使用，所以首先要尽量确保 NexT 的简洁易用性。
 
-Bad:
+NexT is built for easily use with elegant appearance. First things first, always keep things simple.
 
-```
-tags : ['front-end', 'jekyll']
-```
 
-Don't forget to change `_config.yml`.
+## 捐赠
 
-**Relative paths**
+支付宝捐赠链接还是要有的，万一真的有人捐呢。
 
-If your blog is not in the root directory, you can include images with a relative path. For example:
-
-```
-![my_image]({{ site.images | relative_url }}/image.jpg)
-```
-
-## Production environment
-
-Build for production:
-
-`JEKYLL_ENV=production jekyll build`
+![支付宝扫码捐赠](http://7lryc0.com1.z0.glb.clouddn.com/a6x049034plyvjm1rvn4h28%20%281%29.png)
