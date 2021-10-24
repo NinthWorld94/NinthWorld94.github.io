@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle: ''
-description: ''
+title: NinthWorld的博客
+subtitle: '天道酬勤且知行合一'
+description: '前端,JavaScript,编程,React,算法,Vue,框架,学习,生活,随笔'
 keywords:
-author: John Doe
+author: NinthWorld
 language: zh-CN
-timezone: ''
+timezone: 'shanghai'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: https://ninthworld94.github.io/
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -103,5 +103,4 @@ theme: fluid
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://github.com/NinthWorld94/NinthWorld94.github.io.git
-  branch: master
+  repo: https://github.com/NinthWorld94/NinthWorld94.github.io
