@@ -102,4 +102,6 @@ theme: fluid
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: git
+  repo: https://github.com/NinthWorld94/NinthWorld94.github.io.git
+  branch: master
