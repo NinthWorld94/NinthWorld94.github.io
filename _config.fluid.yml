@@ -425,7 +425,7 @@ footer:
 index:
   # 首页 Banner 头图，可以是相对路径或绝对路径，以下相同
   # Path of Banner image, can be a relative path or an absolute path, the same on other pages
-  banner_img: /img/default.png
+  banner_img: https://rmt.ladydaily.com/fetch/fluid/storage/bg/vdysjx.png?w=1920&fmt=webp
 
   # 头图高度，屏幕百分比
   # Height ratio of banner image
@@ -497,7 +497,7 @@ index:
 # Post Page
 #---------------------------
 post:
-  banner_img: /img/default.png
+  banner_img: https://rmt.dogedoge.com/fetch/fluid/storage/bg/73twhs.png?w=1920&fmt=webp
   banner_img_height: 70
   banner_mask_alpha: 0.3
 
@@ -791,10 +791,9 @@ cusdis:
 # Archive Page
 #---------------------------
 archive:
-  banner_img: /img/default.png
-  banner_img_height: 60
+  banner_img: https://rmt.dogedoge.com/fetch/fluid/storage/bg/1cm6iu.png?w=1920&fmt=webp
   banner_mask_alpha: 0.3
-  subtitle:
+  subtitle: '这里是归档页'
 
 
 #---------------------------
@@ -803,10 +802,10 @@ archive:
 #---------------------------
 category:
   enable: true
-  banner_img: /img/default.png
+  banner_img: https://rmt.dogedoge.com/fetch/fluid/storage/bg/sdqryn.png?w=1920&fmt=webp
   banner_img_height: 60
   banner_mask_alpha: 0.3
-  subtitle:
+  subtitle: '这里是分类页'
 
   # 分类的排序字段，前面带减号是倒序，不带减号是正序
   # Sort field for categories, with a minus sign is reverse order
@@ -833,10 +832,10 @@ category:
 #---------------------------
 tag:
   enable: true
-  banner_img: /img/default.png
+  banner_img: https://rmt.dogedoge.com/fetch/fluid/storage/bg/n7a9bv.png?w=1920&fmt=webp
   banner_img_height: 80
   banner_mask_alpha: 0.3
-  subtitle:
+  subtitle: '这里是标签页'
   tagcloud:
     min_font: 15
     max_font: 30
@@ -851,10 +850,10 @@ tag:
 #---------------------------
 about:
   enable: true
-  banner_img: /img/default.png
+  banner_img: https://rmt.dogedoge.com/fetch/fluid/storage/bg/4xvpqo.png?w=1920&fmt=webp
   banner_img_height: 60
   banner_mask_alpha: 0.3
-  subtitle:
+  subtitle: '这里是关于页'
   avatar: /img/avatar.png
   name: "Fluid"
   intro: "An elegant theme for Hexo"
