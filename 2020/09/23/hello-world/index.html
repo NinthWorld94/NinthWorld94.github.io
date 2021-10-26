@@ -16,20 +16,20 @@
   <meta name="description" content="前端,JavaScript,编程,React,算法,Vue,框架,学习,生活,随笔">
   <meta name="author" content="NinthWorld">
   <meta name="keywords" content="前端,JavaScript,编程,React,算法,Vue,框架,学习,生活,随笔">
-  <meta name="description" content="博主17 Quick StartCreate a new post1$ hexo new &quot;My New Post&quot;  More info: Writing Run server1$ hexo server  More info: Server Generate static files1$ hexo generate  More info: Generating Deploy">
+  <meta name="description" content="一.数据类型在es5之前总共有：null undefined boolean object function number 六种数据类型，es6新增了 symbol ,es11新增了 bigint  所以截止es2021，目前总共有：null undefined boolean object function number symbol bigint 基本数据类型 ps：这些也是 typeof 能">
 <meta property="og:type" content="article">
-<meta property="og:title" content="再学JavaScript">
-<meta property="og:url" content="git://ninthworld94.github.io/2020/02/23/再学JavaScript/index.html">
+<meta property="og:title" content="《JavaScript教程》《JavaScript高级程序设计》关键知识点笔记">
+<meta property="og:url" content="git://ninthworld94.github.io/2020/09/23/hello-world/index.html">
 <meta property="og:site_name" content="NinthWorld的博客">
-<meta property="og:description" content="博主17 Quick StartCreate a new post1$ hexo new &quot;My New Post&quot;  More info: Writing Run server1$ hexo server  More info: Server Generate static files1$ hexo generate  More info: Generating Deploy">
+<meta property="og:description" content="一.数据类型在es5之前总共有：null undefined boolean object function number 六种数据类型，es6新增了 symbol ,es11新增了 bigint  所以截止es2021，目前总共有：null undefined boolean object function number symbol bigint 基本数据类型 ps：这些也是 typeof 能">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-02-23T11:20:33.000Z">
-<meta property="article:modified_time" content="2020-02-23T11:20:33.000Z">
+<meta property="article:published_time" content="2020-09-23T11:20:33.000Z">
+<meta property="article:modified_time" content="2020-09-23T11:20:33.000Z">
 <meta property="article:author" content="NinthWorld">
 <meta property="article:tag" content="前端,JavaScript,编程,React,算法,Vue,框架,学习,生活,随笔">
 <meta name="twitter:card" content="summary_large_image">
   
-  <title>再学JavaScript - NinthWorld的博客</title>
+  <title>《JavaScript教程》《JavaScript高级程序设计》关键知识点笔记 - NinthWorld的博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -175,7 +175,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="再学JavaScript">
+            <span class="h2" id="subtitle" title="《JavaScript教程》《JavaScript高级程序设计》关键知识点笔记">
               
             </span>
 
@@ -185,8 +185,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-02-23 19:20" pubdate>
-        2020年2月23日 晚上
+      <time datetime="2020-09-23 19:20" pubdate>
+        2020年9月23日 晚上
       </time>
     </span>
   
@@ -196,7 +196,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      212 字
+      1.6k 字
     </span>
   
 
@@ -205,7 +205,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1 分钟
+      5 分钟
     </span>
   
 
@@ -234,11 +234,30 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">再学JavaScript</h1>
+            <h1 style="display: none">《JavaScript教程》《JavaScript高级程序设计》关键知识点笔记</h1>
             
             <div class="markdown-body">
-              <p>博主17</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
+              <h2 id="一-数据类型"><a href="#一-数据类型" class="headerlink" title="一.数据类型"></a>一.数据类型</h2><p>在es5之前总共有：<em>null</em> <em>undefined</em> <em>boolean</em> <em>object</em> <em>function</em> <em>number</em> 六种数据类型，es6新增了 <em>symbol</em> ,es11新增了 <em>bigint</em> </p>
+<p>所以截止es2021，目前总共有：<em>null</em> <em>undefined</em> <em>boolean</em> <em>object</em> <em>function</em> <em>number</em> <em>symbol</em> <em>bigint</em> 基本数据类型</p>
+<p>ps：这些也是 <code>typeof</code> 能返回的所有值</p>
+<h3 id="数据类型判断的三个原生方法"><a href="#数据类型判断的三个原生方法" class="headerlink" title="数据类型判断的三个原生方法"></a>数据类型判断的三个原生方法</h3><h4 id="1-typeof"><a href="#1-typeof" class="headerlink" title="1.typeof"></a>1.<code>typeof</code></h4><p>数值、字符串、布尔值分别返回number、string、boolean，函数返回function，undefined返回undefined，对象返回object，null返回object。</p>
+<p>ps：<code>typeof null // object</code> 其实是历史原因,1995年的 JavaScript 语言第一版，只设计了五种数据类型（对象、整数、浮点数、字符串和布尔值），没考虑null，只把它当作object的一种特殊值。后来null独立出来，作为一种单独的数据类型，为了兼容以前的代码，typeof null返回object就没法改变了。</p>
+<h4 id="2-instanceof"><a href="#2-instanceof" class="headerlink" title="2.instanceof"></a>2.<code>instanceof</code></h4><p><code>instanceof</code> 运算符返回一个布尔值，表示对象是否为某个构造函数的实例。</p>
+<p><code>instanceof</code> 是基于原型链查找，运算符的左边是实例对象，右边是构造函数。它会检查右边构造函数的原型对象（prototype），是否在左边对象的原型链上。因此，下面两种写法是等价的。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">const v = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Vehicle()</span><br>v instanceof Vehicle<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Vehicle</span>.</span></span>prototype.is<span class="hljs-constructor">PrototypeOf(<span class="hljs-params">v</span>)</span><br></code></pre></td></tr></table></figure>
+<h4 id="3-Object-prototype-toString"><a href="#3-Object-prototype-toString" class="headerlink" title="3.Object.prototype.toString"></a>3.<code>Object.prototype.toString</code></h4><p>因为大部分数据类型都自定义重写了toString方法，一次可以根据此方法的返回值去判断数据类型</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs typescript">数值：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Number</span>]。<br>字符串：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">String</span>]。<br>布尔值：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Boolean</span>]。<br><span class="hljs-literal">undefined</span>：返回[<span class="hljs-built_in">object</span> Undefined]。<br><span class="hljs-literal">null</span>：返回[<span class="hljs-built_in">object</span> Null]。<br>数组：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Array</span>]。<br><span class="hljs-built_in">arguments</span> 对象：返回[<span class="hljs-built_in">object</span> Arguments]。<br>函数：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Function</span>]。<br><span class="hljs-built_in">Error</span> 对象：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Error</span>]。<br><span class="hljs-built_in">Date</span> 对象：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Date</span>]。<br><span class="hljs-built_in">RegExp</span> 对象：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">RegExp</span>]。<br>其他对象：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Object</span>]。<br>symbol对象：返回<span class="hljs-built_in">Symbol</span>()<br></code></pre></td></tr></table></figure>
+
+<h2 id="二-运算符"><a href="#二-运算符" class="headerlink" title="二.运算符"></a>二.运算符</h2><p>加法运算符：<code>x + y</code><br>减法运算符： <code>x - y</code><br>乘法运算符： <code>x * y</code><br>除法运算符：<code>x / y</code><br>指数运算符：<code>x ** y</code><br>余数运算符：<code>x % y</code><br>自增运算符：<code>++x 或者 x++</code><br>自减运算符：<code>--x 或者 x--</code><br>数值运算符： <code>+x</code><br>负数值运算符：<code>-x</code>  </p>
+<p>运算符号值得说的其实就是 <code>+</code> 运算符，加法运算符是在运行时决定，到底是执行相加，还是执行连接。也就是说，运算子的不同，导致了不同的语法行为，这种现象称为“重载”（overload）。<br>比如：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">1 </span>+ true // <span class="hljs-number">2</span><br><span class="hljs-comment">&#x27;3&#x27; + 4 + 5 // &quot;345&quot;</span><br><span class="hljs-symbol">3 </span>+ <span class="hljs-number">4</span> + <span class="hljs-comment">&#x27;5&#x27; // &quot;75&quot;</span><br></code></pre></td></tr></table></figure>
+<p>指数运算符 <code>**</code> </p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">2 </span>** <span class="hljs-number">4</span> // <span class="hljs-number">16</span><br></code></pre></td></tr></table></figure>
+<p>指数运算符需要注意的是，指数运算符是右结合，而不是左结合。即多个指数运算符连用时，先进行最右边的计算。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> 相当于 <span class="hljs-number">2</span> ** (<span class="hljs-number">3</span> ** <span class="hljs-number">2</span>)<br><span class="hljs-number">2</span> ** <span class="hljs-number">3</span> ** <span class="hljs-number">2</span><br><span class="hljs-regexp">//</span> <span class="hljs-number">512</span><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
 <h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
@@ -270,15 +289,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/09/23/hello-world/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">《JavaScript教程》《JavaScript高级程序设计》关键知识点笔记</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2020/02/23/%E5%86%8D%E5%AD%A6JavaScript/">
+                        <span class="hidden-mobile">再学JavaScript</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
