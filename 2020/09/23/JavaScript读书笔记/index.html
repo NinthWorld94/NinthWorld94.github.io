@@ -1,0 +1,548 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="此篇是博主在阅读这两本JavaScript入门书籍时记得一些笔记，以及一些知识点，长期更新，文中有错误欢迎指正，有不同理解欢迎交流。">
+  <meta name="author" content="NinthWorld">
+  <meta name="keywords" content="前端,JavaScript,编程,React,算法,Vue,框架,学习,生活,随笔">
+  <meta name="description" content="此篇是博主在阅读这两本JavaScript入门书籍时记得一些笔记，以及一些知识点，长期更新，文中有错误欢迎指正，有不同理解欢迎交流。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记--《JavaScript教程》《JavaScript高级程序设计》关键知识点笔记">
+<meta property="og:url" content="git://ninthworld94.github.io/2020/09/23/JavaScript读书笔记/index.html">
+<meta property="og:site_name" content="NinthWorld的博客">
+<meta property="og:description" content="此篇是博主在阅读这两本JavaScript入门书籍时记得一些笔记，以及一些知识点，长期更新，文中有错误欢迎指正，有不同理解欢迎交流。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-23T11:20:33.000Z">
+<meta property="article:modified_time" content="2020-09-23T11:20:33.000Z">
+<meta property="article:author" content="NinthWorld">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>读书笔记--《JavaScript教程》《JavaScript高级程序设计》关键知识点笔记 - NinthWorld的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"ninthworld94.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>天道酬勤</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://rmt.dogedoge.com/fetch/fluid/storage/bg/73twhs.png?w=1920&fmt=webp') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="读书笔记--《JavaScript教程》《JavaScript高级程序设计》关键知识点笔记">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-09-23 19:20" pubdate>
+        2020年9月23日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.7k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      15 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">读书笔记--《JavaScript教程》《JavaScript高级程序设计》关键知识点笔记</h1>
+            
+            <div class="markdown-body">
+              <p>此篇是博主在阅读这两本JavaScript入门书籍时记得一些笔记，以及一些知识点，长期更新，文中有错误欢迎指正，有不同理解欢迎交流。</p>
+<span id="more"></span>
+
+<h2 id="一-数据类型"><a href="#一-数据类型" class="headerlink" title="一.数据类型"></a>一.数据类型</h2><p>在es5之前总共有：<em>null</em> <em>undefined</em> <em>boolean</em> <em>object</em> <em>string</em> <em>number</em> 六种数据类型，es6新增了 <em>symbol</em> ,es11新增了 <em>bigint</em> </p>
+<p>所以截止es2021，目前总共有：<em>null</em> <em>undefined</em> <em>boolean</em> <em>object</em> <em>string</em> <em>number</em> <em>symbol</em> <em>bigint</em> 基本数据类型</p>
+<p>ps：这些也是 <code>typeof</code> 能返回的所有值</p>
+<h3 id="原始类型和引用类型"><a href="#原始类型和引用类型" class="headerlink" title="原始类型和引用类型"></a>原始类型和引用类型</h3><p>一版来说JavaScript的数据类型分为两大类，原始类型和引用类型，其中<em>null</em> <em>undefined</em> <em>boolean</em> <em>number</em> <em>symbol</em> <em>bigint</em> <em>string</em> 都是基本数据类型。<br>基本数据类型中除了<code>null</code> 跟 <code>undefined</code> 都有包装对象，在你调用这些基本类型的属性跟方法的时候其实就是创建了一个临时的包装对象，然后执行对应的属性跟方法，执行完之后就销毁。<br>值得一提的是虽然 <code>symbol</code> 跟 <code>bigint</code> 有包装对象但是没有构造函数，所以使用 <code>new</code> 操作会报错。</p>
+<h3 id="数据类型判断的三个原生方法"><a href="#数据类型判断的三个原生方法" class="headerlink" title="数据类型判断的三个原生方法"></a>数据类型判断的三个原生方法</h3><h4 id="1-typeof"><a href="#1-typeof" class="headerlink" title="1.typeof"></a>1.<code>typeof</code></h4><p>数值、字符串、布尔值分别返回number、string、boolean，函数返回function，undefined返回undefined，对象返回object，null返回object。</p>
+<p>ps：<code>typeof null // object</code> 其实是历史原因,1995年的 JavaScript 语言第一版，只设计了五种数据类型（对象、整数、浮点数、字符串和布尔值），没考虑null，只把它当作object的一种特殊值。后来null独立出来，作为一种单独的数据类型，为了兼容以前的代码，typeof null返回object就没法改变了。</p>
+<h4 id="2-instanceof"><a href="#2-instanceof" class="headerlink" title="2.instanceof"></a>2.<code>instanceof</code></h4><p><code>instanceof</code> 运算符返回一个布尔值，表示对象是否为某个构造函数的实例。</p>
+<p><code>instanceof</code> 是基于原型链查找，运算符的左边是实例对象，右边是构造函数。它会检查右边构造函数的原型对象（prototype），是否在左边对象的原型链上。因此，下面两种写法是等价的。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">const v = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Vehicle()</span><br>v instanceof Vehicle<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Vehicle</span>.</span></span>prototype.is<span class="hljs-constructor">PrototypeOf(<span class="hljs-params">v</span>)</span><br></code></pre></td></tr></table></figure>
+<h4 id="3-Object-prototype-toString"><a href="#3-Object-prototype-toString" class="headerlink" title="3.Object.prototype.toString"></a>3.<code>Object.prototype.toString</code></h4><p>因为大部分数据类型都自定义重写了toString方法，一次可以根据此方法的返回值去判断数据类型</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs typescript">数值：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Number</span>]。<br>字符串：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">String</span>]。<br>布尔值：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Boolean</span>]。<br><span class="hljs-literal">undefined</span>：返回[<span class="hljs-built_in">object</span> Undefined]。<br><span class="hljs-literal">null</span>：返回[<span class="hljs-built_in">object</span> Null]。<br>数组：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Array</span>]。<br><span class="hljs-built_in">arguments</span> 对象：返回[<span class="hljs-built_in">object</span> Arguments]。<br>函数：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Function</span>]。<br><span class="hljs-built_in">Error</span> 对象：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Error</span>]。<br><span class="hljs-built_in">Date</span> 对象：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Date</span>]。<br><span class="hljs-built_in">RegExp</span> 对象：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">RegExp</span>]。<br>其他对象：返回[<span class="hljs-built_in">object</span> <span class="hljs-built_in">Object</span>]。<br>symbol对象：返回<span class="hljs-built_in">Symbol</span>()<br></code></pre></td></tr></table></figure>
+
+<h2 id="二-运算符"><a href="#二-运算符" class="headerlink" title="二.运算符"></a>二.运算符</h2><p>加法运算符：<code>x + y</code><br>减法运算符： <code>x - y</code><br>乘法运算符： <code>x * y</code><br>除法运算符：<code>x / y</code><br>指数运算符：<code>x ** y</code><br>余数运算符：<code>x % y</code><br>自增运算符：<code>++x 或者 x++</code><br>自减运算符：<code>--x 或者 x--</code><br>数值运算符： <code>+x</code><br>负数值运算符：<code>-x</code>  </p>
+<h3 id="加法运算符"><a href="#加法运算符" class="headerlink" title="加法运算符 +"></a>加法运算符 <code>+</code></h3><p>上面这些运算符号值得说的其实就是 <code>+</code> 运算符，加法运算符是在运行时决定，到底是执行相加，还是执行连接。也就是说，运算子的不同，导致了不同的语法行为，这种现象称为“重载”（overload）。<br>比如：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">1 </span>+ true // <span class="hljs-number">2</span><br><span class="hljs-comment">&#x27;3&#x27; + 4 + 5 // &quot;345&quot;</span><br><span class="hljs-symbol">3 </span>+ <span class="hljs-number">4</span> + <span class="hljs-comment">&#x27;5&#x27; // &quot;75&quot;</span><br></code></pre></td></tr></table></figure>
+<h3 id="指数运算符"><a href="#指数运算符" class="headerlink" title="指数运算符 **"></a>指数运算符 <code>**</code></h3><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">2 </span>** <span class="hljs-number">4</span> // <span class="hljs-number">16</span><br></code></pre></td></tr></table></figure>
+<p>指数运算符需要注意的是，指数运算符是右结合，而不是左结合。即多个指数运算符连用时，先进行最右边的计算。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> 相当于 <span class="hljs-number">2</span> ** (<span class="hljs-number">3</span> ** <span class="hljs-number">2</span>)<br> <span class="hljs-number">2</span> ** <span class="hljs-number">3</span> ** <span class="hljs-number">2</span><br><span class="hljs-regexp">//</span> <span class="hljs-number">512</span><br></code></pre></td></tr></table></figure>
+<h3 id="布尔运算符"><a href="#布尔运算符" class="headerlink" title="布尔运算符"></a>布尔运算符</h3><p>布尔运算符就以下四种：  </p>
+<ul>
+<li>取反运算符：<code>!</code></li>
+<li>且运算符：<code>&amp;&amp;</code></li>
+<li>或运算符：<code>||</code></li>
+<li>三元运算符：<code>?:</code></li>
+</ul>
+<h4 id="1-取反运算符："><a href="#1-取反运算符：" class="headerlink" title="1.取反运算符：!"></a>1.取反运算符：<code>!</code></h4><p><code>!</code>运算符会把布尔值变成相反值，值得注意的是也能对非布尔值取反，只要记住以下取反是<code>true</code>其他都是<code>false</code>:  </p>
+<ul>
+<li><code>undefined</code></li>
+<li><code>null</code></li>
+<li><code>false</code></li>
+<li><code>0</code></li>
+<li><code>NaN</code></li>
+<li><code>&#39;&#39;</code></li>
+</ul>
+<p>小tips：对一个变量两次取反就是把变量变成对应的<code>boolean</code>值，相当于<code>Boolean()</code>方法</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">!!x<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-function"><span class="hljs-title">Boolean</span><span class="hljs-params">(x)</span></span><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-且运算符：-amp-amp"><a href="#2-且运算符：-amp-amp" class="headerlink" title="2.且运算符：&amp;&amp;"></a>2.且运算符：<code>&amp;&amp;</code></h4><p>它的运算规则是：如果第一个运算子的布尔值为 <code>true</code>，则返回第二个运算子的值（注意是值，不是布尔值）；如果第一个运算子的布尔值为 <code>false</code>，则直接返回第一个运算子的值，且不再对第二个运算子求值。<br>ps：经常拿来代替 <code>if</code></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-selector-tag">if</span> (i) &#123;<br>  <span class="hljs-selector-tag">doSomething</span>();<br>&#125;<br><span class="hljs-comment">// 等价于</span><br><span class="hljs-selector-tag">i</span> <span class="hljs-selector-tag">&amp;</span><span class="hljs-selector-tag">&amp;</span> <span class="hljs-selector-tag">doSomething</span>();<br></code></pre></td></tr></table></figure>
+<h4 id="3-或运算符："><a href="#3-或运算符：" class="headerlink" title="3.或运算符：||"></a>3.或运算符：<code>||</code></h4><p>它的运算规则是：如果第一个运算子的布尔值为true，则返回第一个运算子的值，且不再对第二个运算子求值；如果第一个运算子的布尔值为false，则返回第二个运算子的值。<br>ps：经常拿来设置一个变量的默认值</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">const</span> <span class="hljs-built_in">str</span> = <span class="hljs-keyword">new</span> <span class="hljs-keyword">String</span>() || <span class="hljs-string">&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="4-三元运算符："><a href="#4-三元运算符：" class="headerlink" title="4.三元运算符：?:"></a>4.三元运算符：<code>?:</code></h4><p>三元条件运算符由问号（?）和冒号（:）组成，分隔三个表达式。它是 JavaScript 语言唯一一个需要三个运算子的运算符。如果第一个表达式的布尔值为true，则返回第二个表达式的值，否则返回第三个表达式的值。<br>ps: 经常拿来代替if else 非常的简便好用,而且具有返回值</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs actionscript"><span class="hljs-keyword">const</span> isBoy = sex===<span class="hljs-string">&#x27;男&#x27;</span> ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span><br></code></pre></td></tr></table></figure>
+<h3 id="位运算符"><a href="#位运算符" class="headerlink" title="位运算符"></a>位运算符</h3><p>二进制位运算符用于直接对二进制位进行计算，一共有7个。</p>
+<ul>
+<li>二进制或运算符（or）：符号为<code>|</code>，表示若两个二进制位都为0，则结果为0，否则为1。</li>
+<li>二进制与运算符（and）：符号为<code>&amp;</code>，表示若两个二进制位都为1，则结果为1，否则为0。</li>
+<li>二进制否运算符（not）：符号为<code>~</code>，表示对一个二进制位取反。</li>
+<li>异或运算符（xor）：符号为<code>^</code>，表示若两个二进制位不相同，则结果为1，否则为0。</li>
+<li>左移运算符（left shift）：符号为<code>&lt;&lt;</code>。</li>
+<li>右移运算符（right shift）：符号为<code>&gt;&gt;</code>。</li>
+<li>头部补零的右移运算符（zero filled right shift）：符号为<code>&gt;&gt;&gt;</code>。</li>
+</ul>
+<p>有一点需要特别注意，位运算符只对整数起作用，如果一个运算子不是整数，会自动转为整数后再执行。另外，虽然在 JavaScript 内部，数值都是以64位浮点数的形式储存，但是做位运算的时候，是以32位带符号的整数进行运算的，并且返回值也是一个32位带符号的整数。</p>
+<p>前四个根据上面的字面意思自己理解，这里写一些比较有意思的位运算操作:  </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> 把i转成成一个整数<br>i = i | <span class="hljs-number">0</span> <br><br><span class="hljs-regexp">//</span> 不依赖第三个变量交换ab的值<br>var a = <span class="hljs-number">10</span>;<br>var b = <span class="hljs-number">99</span>;<br>a ^= b, b ^= a, a ^= b;<br>a <span class="hljs-regexp">//</span> <span class="hljs-number">99</span><br>b <span class="hljs-regexp">//</span> <span class="hljs-number">10</span><br></code></pre></td></tr></table></figure>
+<h4 id="左移运算符-lt-lt"><a href="#左移运算符-lt-lt" class="headerlink" title="左移运算符 &lt;&lt;"></a>左移运算符 <code>&lt;&lt;</code></h4><p>左移运算符（&lt;&lt;）表示将一个数的二进制值向左移动指定的位数，尾部补0，即乘以2的指定次方。向左移动的时候，最高位的符号位是一起移动的。</p>
+<h4 id="右移运算符-gt-gt"><a href="#右移运算符-gt-gt" class="headerlink" title="右移运算符 &gt;&gt;"></a>右移运算符 <code>&gt;&gt;</code></h4><p>右移运算符（&gt;&gt;）表示将一个数的二进制值向右移动指定的位数。如果是正数，头部全部补0；如果是负数，头部全部补1。右移运算符基本上相当于除以2的指定次方（最高位即符号位参与移动）。</p>
+<h4 id="左移运算符-gt-gt-gt"><a href="#左移运算符-gt-gt-gt" class="headerlink" title="左移运算符 &gt;&gt;&gt;"></a>左移运算符 <code>&gt;&gt;&gt;</code></h4><p>头部补零的右移运算符（&gt;&gt;&gt;）与右移运算符（&gt;&gt;）只有一个差别，就是一个数的二进制形式向右移动时，头部一律补零，而不考虑符号位。所以，该运算总是得到正值。对于正数，该运算的结果与右移运算符（&gt;&gt;）完全一致，区别主要在于负数。<br>查看一个负整数在计算机内部的储存形式，最快的方法就是使用这个运算符。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">-<span class="hljs-number">1</span> &gt;&gt;&gt; <span class="hljs-number">0</span> <span class="hljs-regexp">//</span> <span class="hljs-number">4294967295</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="JavaScript类型转换"><a href="#JavaScript类型转换" class="headerlink" title="JavaScript类型转换"></a>JavaScript类型转换</h2><h3 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h3><p>1.<code>Number()</code>  </p>
+<p>对于基本类型直接转换，对于对象：  </p>
+<p>第一步，调用对象自身的<code>valueOf</code>方法。如果返回原始类型的值，则直接对该值使用<code>Number</code>函数，不再进行后续步骤。  </p>
+<p>第二步，如果<code>valueOf</code>方法返回的还是对象，则改为调用对象自身的<code>toString</code>方法。如果<code>toString</code>方法返回原始类型的值，则对该值使用Number函数，不再进行后续步骤。</p>
+<p>第三步，如果<code>toString</code>方法返回的是对象，就报错。  </p>
+<p><code>Number()</code> 比 <code>parseInt</code>严哥很多，只要有一个字没法转换成数值就会转成NaN  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">parseInt</span><span class="hljs-params">(<span class="hljs-string">&#x27;42 cats&#x27;</span>)</span></span> <span class="hljs-comment">// 42</span><br><span class="hljs-function"><span class="hljs-title">Number</span><span class="hljs-params">(<span class="hljs-string">&#x27;42 cats&#x27;</span>)</span></span> <span class="hljs-comment">// NaN</span><br></code></pre></td></tr></table></figure>
+
+<p>2.<code>String()</code>  </p>
+<p>与``Number<code>基本相同，只是先执行</code>toString<code>，结果不符合再执行 </code>valueOf`  </p>
+<p>3.<code>Boolean()</code>  </p>
+<p>除了以下五个转换为<code>false</code>，其他所以值都是<code>true</code> 甚至包括 <code>false</code> 的包装对象  </p>
+<ul>
+<li><code>undefined</code></li>
+<li><code>null</code></li>
+<li><code>0（包含-0和+0）</code></li>
+<li><code>NaN</code></li>
+<li><code>&#39;&#39;（空字符串）</code></li>
+</ul>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-built_in">Boolean</span>(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Boolean</span>(<span class="hljs-literal">false</span>)) <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="自动转换（隐式转换）"><a href="#自动转换（隐式转换）" class="headerlink" title="自动转换（隐式转换）"></a>自动转换（隐式转换）</h3><p>出现情况主要有以下这些情况：  </p>
+<ul>
+<li>不同类型的数据互相运算 <code>123 + &#39;abc&#39; // &quot;123abc&quot;</code></li>
+<li>对非布尔值类型的数据求布尔值 <code>if(&#39;abc&#39;)</code></li>
+<li>对非数值类型的值使用一元运算符 <code>+ &#123;foo: &#39;bar&#39;&#125; // NaN</code></li>
+</ul>
+<h2 id="标准库"><a href="#标准库" class="headerlink" title="标准库"></a>标准库</h2><h3 id="Object对象"><a href="#Object对象" class="headerlink" title="Object对象"></a>Object对象</h3><h4 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h4><p>1.<code>Object.keys()</code> 与 <code>Object.getOwnPropertyNames()</code>  </p>
+<p>这两个方法都是返回对像自身的属性名集合，结果是一个数组。区别是：<br>前者不会返回不可枚举的属性名，后者会。</p>
+<h4 id="实例方法"><a href="#实例方法" class="headerlink" title="实例方法"></a>实例方法</h4><p>1.<code>Object.prototype.valueOf()</code> 返回当前对象的对应值  </p>
+<p>默认返回对象本身，在一些类型转换的情况，比如 <code>1 + obj &quot;1[object Object]&quot;</code> 时会调用这个方法，可以重写以实现一些特殊的现象。  </p>
+<p>2.<code>Object.prototype.toString() </code> 返回当前对象对应的字符串形式  </p>
+<p>默认返回<code>&quot;[object Object]&quot;</code>,在跟字符串做加法时会调用这个方法，并且可使用这个方法判断数据类型</p>
+<p>3.<code>Object.prototype.toLocaleString()</code> 返回当前对象对应的本地字符串形式  </p>
+<p><code>Object.prototype.toLocaleString</code>方法与<code>toString</code>的返回结果相同，也是返回一个值的字符串形式。<br>这个方法的主要作用是留出一个接口，让各种不同的对象实现自己版本的<code>toLocaleString</code>，用来返回针对某些地域的特定的值。</p>
+<p>4.<code>Object.prototype.hasOwnProperty()</code> 判断某个属性是否为当前对象自身的属性，还是继承自原型对象的属性。  </p>
+<p>ps： 可以遍历属性的不可枚举属性</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%AD%A6%E4%B9%A0/">学习</a>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/23/%E5%86%8D%E5%AD%A6JavaScript%E7%B3%BB%E5%88%97-%E5%80%BC%E7%B1%BB%E5%9E%8B%E8%B7%9F%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E5%88%B0%E5%BA%95%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F%E5%80%BC%E7%B1%BB%E5%9E%8B%E5%AD%98%E5%9C%A8%E6%A0%88%E4%B8%8A%E9%9D%A2%E4%B8%8A%E4%B8%80%E5%AE%9A%E6%AD%A3%E7%A1%AE%E5%90%97%EF%BC%9F/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">再学JavaScript系列--值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
