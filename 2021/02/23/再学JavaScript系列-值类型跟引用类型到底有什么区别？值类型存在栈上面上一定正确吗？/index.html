@@ -13,17 +13,17 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="分析造成引用类型跟值类型的行为差异的底层原因，V8堆栈模型浅析，以及对一些数据类型的存储机制解析">
+  <meta name="description" content="跟前同事讨论技术，他跟我说JS的值类型不是存在栈里，于是我去学习探讨了一波。本文将分析造成引用类型跟值类型的行为差异的底层原因，V8堆栈模型浅析，以及对一些数据类型的存储机制解析。">
   <meta name="author" content="NinthWorld">
   <meta name="keywords" content="前端,JavaScript,编程,React,算法,Vue,框架,学习,生活,随笔">
-  <meta name="description" content="分析造成引用类型跟值类型的行为差异的底层原因，V8堆栈模型浅析，以及对一些数据类型的存储机制解析">
+  <meta name="description" content="跟前同事讨论技术，他跟我说JS的值类型不是存在栈里，于是我去学习探讨了一波。本文将分析造成引用类型跟值类型的行为差异的底层原因，V8堆栈模型浅析，以及对一些数据类型的存储机制解析。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="再学JavaScript系列--值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？">
+<meta property="og:title" content="前同事跟我说js的值类型数据不是存在栈里WTF？值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？--再学JavaScript系列">
 <meta property="og:url" content="git://ninthworld94.github.io/2021/02/23/再学JavaScript系列-值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？/index.html">
 <meta property="og:site_name" content="NinthWorld的博客">
-<meta property="og:description" content="分析造成引用类型跟值类型的行为差异的底层原因，V8堆栈模型浅析，以及对一些数据类型的存储机制解析">
+<meta property="og:description" content="跟前同事讨论技术，他跟我说JS的值类型不是存在栈里，于是我去学习探讨了一波。本文将分析造成引用类型跟值类型的行为差异的底层原因，V8堆栈模型浅析，以及对一些数据类型的存储机制解析。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="git://ninthworld94.github.io/2021/02/23/再学JavaScript系列-值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？//srack&heap.jpg">
+<meta property="og:image" content="git:///2021/02/23/再学JavaScript系列-值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？/srack&heap.jpg">
 <meta property="og:image" content="git:///2021/02/23/再学JavaScript系列-值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？/heap.jpg">
 <meta property="og:image" content="git:///2021/02/23/再学JavaScript系列-值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？/bigString.jpeg">
 <meta property="og:image" content="git:///2021/02/23/再学JavaScript系列-值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？/stringTable.png">
@@ -36,9 +36,9 @@
 <meta property="article:tag" content="V8">
 <meta property="article:tag" content="堆栈模型">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="git://ninthworld94.github.io/2021/02/23/再学JavaScript系列-值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？//srack&heap.jpg">
+<meta name="twitter:image" content="git:///2021/02/23/再学JavaScript系列-值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？/srack&heap.jpg">
   
-  <title>再学JavaScript系列--值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？ - NinthWorld的博客</title>
+  <title>前同事跟我说js的值类型数据不是存在栈里WTF？值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？--再学JavaScript系列 - NinthWorld的博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -184,7 +184,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="再学JavaScript系列--值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？">
+            <span class="h2" id="subtitle" title="前同事跟我说js的值类型数据不是存在栈里WTF？值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？--再学JavaScript系列">
               
             </span>
 
@@ -205,7 +205,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.4k 字
+      2.5k 字
     </span>
   
 
@@ -243,15 +243,15 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">再学JavaScript系列--值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？</h1>
+            <h1 style="display: none">前同事跟我说js的值类型数据不是存在栈里WTF？值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？--再学JavaScript系列</h1>
             
             <div class="markdown-body">
-              <p>分析造成引用类型跟值类型的行为差异的底层原因，V8堆栈模型浅析，以及对一些数据类型的存储机制解析</p>
+              <p>跟前同事讨论技术，他跟我说JS的值类型不是存在栈里，于是我去学习探讨了一波。本文将分析造成引用类型跟值类型的行为差异的底层原因，V8堆栈模型浅析，以及对一些数据类型的存储机制解析。</p>
 <span id="more"></span>
 
 <h2 id="值类型和引用类型的特点"><a href="#值类型和引用类型的特点" class="headerlink" title="值类型和引用类型的特点"></a>值类型和引用类型的特点</h2><p>根据JS的定义，或者说ECMAScript的定义总共有八种语言类型：<code>null</code>,<code>undefined</code>,<code>number</code>,<code>boolean</code>,<code>string</code>,<code>symbol</code>,<code>bigint</code>,<code>object</code><br>其中除了 <code>object</code> 其他都是值类型，我们用一段代码来概括其区别:  </p>
 <figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs nix"><span class="hljs-keyword">let</span> <span class="hljs-attr">a</span> = <span class="hljs-number">1</span>;<br><span class="hljs-keyword">let</span> <span class="hljs-attr">b</span> = a;<br><span class="hljs-attr">a</span> = <span class="hljs-number">2</span> <br>console.log(b); // <span class="hljs-number">1</span><br><span class="hljs-keyword">let</span> <span class="hljs-attr">c</span> = &#123;x: <span class="hljs-number">1</span>&#125;;<br><span class="hljs-keyword">let</span> <span class="hljs-attr">d</span> = c;<br>c.<span class="hljs-attr">x</span> = <span class="hljs-number">2</span><br>console.log(c.x); // <span class="hljs-number">2</span><br><span class="hljs-keyword">let</span> <span class="hljs-attr">e</span> = <span class="hljs-number">2</span> <br><span class="hljs-keyword">let</span> <span class="hljs-attr">f</span> = <span class="hljs-number">2</span><br><span class="hljs-attr">e</span> === f // <span class="hljs-literal">true</span> <br><span class="hljs-keyword">let</span> <span class="hljs-attr">g</span> = &#123;x: <span class="hljs-number">1</span>&#125;;<br><span class="hljs-keyword">let</span> <span class="hljs-attr">h</span> = &#123;x: <span class="hljs-number">1</span>&#125;;<br><span class="hljs-attr">g</span> === h // <span class="hljs-literal">false</span><br></code></pre></td></tr></table></figure>
-<h2 id="数据在堆栈中的存储"><a href="#数据在堆栈中的存储" class="headerlink" title="数据在堆栈中的存储"></a>数据在堆栈中的存储</h2><p>对于以上现象，先用通俗的解释：<br>对于值类型，其在内存中存储在一个栈当中其中key是变量名，value是具体的值。因此<code>b = a</code>成立因为value完全一致嘛。<br>而对于引用类型，<code>let c = &#123;x: 1&#125;</code> 这行代码先在堆上面开辟一块内存空间,其中存储着 <code>&#123;x:1&#125;</code>这条数据，然后对于变量<code>c</code>其value中存储着这个空间的地址，因此<code>d = c</code>的赋值操作其实是复制了一份地址，而不是数据，二者都指向堆里面的<code>&#123;x: 1&#125;</code>数据，因此当修改二者其中之一时，另一个变量随之改变。对于<code>g</code>跟<code>h</code>两个变量，二者虽然数据一摸一样，但是二者不是同一块内存空间，修改<code>g</code>中的<code>x：1</code>不会改变<code>h</code>中的<code>x</code>因此不相等。<br>图解如下：<br><img src=".//srack&heap.jpg" srcset="/img/loading.gif" lazyload title="堆栈"></p>
+<h2 id="数据在堆栈中的存储"><a href="#数据在堆栈中的存储" class="headerlink" title="数据在堆栈中的存储"></a>数据在堆栈中的存储</h2><p>对于以上现象，先用通俗的解释：<br>对于值类型，其在内存中存储在一个栈当中其中key是变量名，value是具体的值。因此<code>b = a</code>成立因为value完全一致嘛。<br>而对于引用类型，<code>let c = &#123;x: 1&#125;</code> 这行代码先在堆上面开辟一块内存空间,其中存储着 <code>&#123;x:1&#125;</code>这条数据，然后对于变量<code>c</code>其value中存储着这个空间的地址，因此<code>d = c</code>的赋值操作其实是复制了一份地址，而不是数据，二者都指向堆里面的<code>&#123;x: 1&#125;</code>数据，因此当修改二者其中之一时，另一个变量随之改变。对于<code>g</code>跟<code>h</code>两个变量，二者虽然数据一摸一样，但是二者不是同一块内存空间，修改<code>g</code>中的<code>x：1</code>不会改变<code>h</code>中的<code>x</code>因此不相等。<br>图解如下：<br><img src="/2021/02/23/再学JavaScript系列-值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？/srack&heap.jpg" srcset="/img/loading.gif" lazyload title="堆栈"></p>
 <h2 id="堆栈的空间结构"><a href="#堆栈的空间结构" class="headerlink" title="堆栈的空间结构"></a>堆栈的空间结构</h2><p>栈的空间结构没什么好讲的，就是一块连续的存储空间，再看看堆的存储结构张图:<br><img src="/2021/02/23/再学JavaScript系列-值类型跟引用类型到底有什么区别？值类型存在栈上面上一定正确吗？/heap.jpg" srcset="/img/loading.gif" lazyload title="堆内存结构"><br>其中：  </p>
 <ul>
 <li><p>新生代内存区（new space）<br>新生代内存区会被划分为两个semispace，每个semispace大小默认为16MB也就是说新生代内存区通常只有32MB大小（64位），而这两个semispace分别是from space 和 to space（具体有什么用下文会说），通常新创建的对象会先放入这两个semispace中的一个。</p>
@@ -320,6 +320,12 @@
                 <div class="post-prevnext">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2021/03/10/%E5%86%8D%E5%AD%A6JavaScript%E7%B3%BB%E5%88%97-%E6%89%8B%E5%86%99PromiseA/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">为了学习Promise我手写了一个PromiseA+并实现了所以静态方法......--再学JavaScript系列</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
