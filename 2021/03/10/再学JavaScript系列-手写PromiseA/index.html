@@ -335,7 +335,7 @@
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">catch</span> (cb_catch) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.then(<span class="hljs-literal">null</span>, cb_catch)<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>至此，手写<code>Promise A+</code>部分的全部工作就完成啦！</p>
 <h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>先安装<code>promises-aplus-tests</code>这个测试库  </p>
-<p>测试代码如下：</p>
+<p>加入测试代码：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript">myPromise.deferred = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">var</span> result = &#123;&#125;;<br>  result.promise = <span class="hljs-keyword">new</span> myPromise(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) </span>&#123;<br>    result.resolve = resolve;<br>    result.reject = reject;<br>  &#125;);<br><br>  <span class="hljs-keyword">return</span> result;<br>&#125;<br><span class="hljs-built_in">module</span>.exports = myPromise;<br></code></pre></td></tr></table></figure>
 <p>测试结果:<br><img src="/2021/03/10/再学JavaScript系列-手写PromiseA/promise%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C.png" srcset="/img/loading.gif" lazyload title="A+测试结果"><br>大功告成！872个测试用例都完美通过，成就感满满！</p>
 <h2 id="Promise的静态方法"><a href="#Promise的静态方法" class="headerlink" title="Promise的静态方法"></a>Promise的静态方法</h2><p>经过上面的锻炼，我们对<code>Promise</code>已经有了比较深入的了解，接下来可以对<code>Promise</code>进行一些拓展实现,其实几乎所有的API都是基于<code>then</code>方法去做拓展。</p>
@@ -402,9 +402,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/11/01/React%E5%8E%9F%E7%90%86%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/">
+                      <a href="/2021/06/08/%E5%90%8E%E7%AB%AF%E5%90%8C%E4%BA%8B%E6%94%B9%E4%BA%86%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%88%91%E4%BA%94%E5%88%86%E9%92%9F%E5%88%B7%E6%96%B0%E4%B8%80%E6%AC%A1%E3%80%82%E3%80%82%E3%80%82-C%E7%AB%AF%E7%99%BB%E5%BD%95%E8%AE%BE%E8%AE%A1/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">React原理源码系统性学习心得</span>
+                        <span class="hidden-mobile">后端同事改了登录接口导致我五分钟刷新一次。。。--工作经验之用户登录设计</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

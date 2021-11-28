@@ -1,0 +1,509 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="笔者最近做项目时候，遇到qa反馈说，提交一个表单时多次点击生成了多条数据，很显然是因为没有做节流和防抖，但是对于使用react-hook函数组件来说，标准的js版本显然是不适用的（文中详细解释了各种场景下的闭包陷进），本文将写一个react-hook版本的节流和防抖。">
+  <meta name="author" content="NinthWorld">
+  <meta name="keywords" content="前端,JavaScript,编程,React,算法,Vue,框架,学习,生活,随笔">
+  <meta name="description" content="笔者最近做项目时候，遇到qa反馈说，提交一个表单时多次点击生成了多条数据，很显然是因为没有做节流和防抖，但是对于使用react-hook函数组件来说，标准的js版本显然是不适用的（文中详细解释了各种场景下的闭包陷进），本文将写一个react-hook版本的节流和防抖。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="防抖节流的react-hook版本--工作经验之解决频繁的用户操作带来的问题">
+<meta property="og:url" content="git://ninthworld94.github.io/2021/06/13/防抖节流的react-hook版本-工作经验之解决频繁的用户操作带来的问题/index.html">
+<meta property="og:site_name" content="NinthWorld的博客">
+<meta property="og:description" content="笔者最近做项目时候，遇到qa反馈说，提交一个表单时多次点击生成了多条数据，很显然是因为没有做节流和防抖，但是对于使用react-hook函数组件来说，标准的js版本显然是不适用的（文中详细解释了各种场景下的闭包陷进），本文将写一个react-hook版本的节流和防抖。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="git:///2021/06/13/防抖节流的react-hook版本-工作经验之解决频繁的用户操作带来的问题/%E6%BC%94%E7%A4%BA1.png">
+<meta property="og:image" content="git:///2021/06/13/防抖节流的react-hook版本-工作经验之解决频繁的用户操作带来的问题/%E6%BC%94%E7%A4%BA2.png">
+<meta property="og:image" content="git:///2021/06/13/防抖节流的react-hook版本-工作经验之解决频繁的用户操作带来的问题/%E6%BC%94%E7%A4%BA3.png">
+<meta property="og:image" content="git:///2021/06/13/防抖节流的react-hook版本-工作经验之解决频繁的用户操作带来的问题/%E6%BC%94%E7%A4%BA4.png">
+<meta property="article:published_time" content="2021-06-13T13:57:15.000Z">
+<meta property="article:modified_time" content="2021-06-13T13:57:15.000Z">
+<meta property="article:author" content="NinthWorld">
+<meta property="article:tag" content="经验分享">
+<meta property="article:tag" content="节流防抖">
+<meta property="article:tag" content="useRef">
+<meta property="article:tag" content="闭包陷进">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="git:///2021/06/13/防抖节流的react-hook版本-工作经验之解决频繁的用户操作带来的问题/%E6%BC%94%E7%A4%BA1.png">
+  
+  <title>防抖节流的react-hook版本--工作经验之解决频繁的用户操作带来的问题 - NinthWorld的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"ninthworld94.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>天道酬勤</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://rmt.dogedoge.com/fetch/fluid/storage/bg/73twhs.png?w=1920&fmt=webp') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="防抖节流的react-hook版本--工作经验之解决频繁的用户操作带来的问题">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-06-13 21:57" pubdate>
+        2021年6月13日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">防抖节流的react-hook版本--工作经验之解决频繁的用户操作带来的问题</h1>
+            
+            <div class="markdown-body">
+              <p>笔者最近做项目时候，遇到qa反馈说，提交一个表单时多次点击生成了多条数据，很显然是因为没有做节流和防抖，但是对于使用react-hook函数组件来说，标准的js版本显然是不适用的（文中详细解释了各种场景下的闭包陷进），本文将写一个react-hook版本的节流和防抖。</p>
+<span id="more"></span>
+
+<h2 id="什么是节流和防抖？"><a href="#什么是节流和防抖？" class="headerlink" title="什么是节流和防抖？"></a>什么是节流和防抖？</h2><p>先来看看百度上通常能找到的概念：</p>
+<blockquote>
+<p>防抖意味着 N 秒内函数只会被执行一次（最后一次），如果 N 秒内再次被触发，则重新计算延迟时间。<br>节流函数的作用是规定一个单位时间，在这个单位时间内最多只能触发一次函数执行，如果这个单位时间内多次触发函数，只能有一次生效。</p>
+</blockquote>
+<p>什么还是不懂？</p>
+<p>假如你经常玩游戏你可以这样理解：</p>
+<ul>
+<li>对于防抖来说：防抖就是技能释放需要的固定施法前摇，反复释放会重新计算前摇，前摇结束技能施放。  </li>
+<li>对于节流来说：节流就是技能的CD（冷却时间），当处于CD状态，反复释放什么也不会发生，只有当CD转好，技能才能成功正确释放。</li>
+</ul>
+<p>这样是不是会更好理解。</p>
+<h2 id="常见的js版本防抖节流"><a href="#常见的js版本防抖节流" class="headerlink" title="常见的js版本防抖节流"></a>常见的js版本防抖节流</h2><p>防抖：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn, delay</span>) </span>&#123;<br>    <span class="hljs-keyword">let</span> timer = <span class="hljs-literal">null</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>        <span class="hljs-keyword">if</span> (timer) <span class="hljs-built_in">clearTimeout</span>(timer)<br>        timer = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>            fn.call(<span class="hljs-built_in">this</span>)<br>            timer = <span class="hljs-literal">null</span><br>        &#125;, delay)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>节流：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">throttle</span>(<span class="hljs-params">fn, delay</span>) </span>&#123;<br>    <span class="hljs-keyword">let</span> timer = <span class="hljs-literal">null</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>        <span class="hljs-keyword">if</span> (timer) <span class="hljs-keyword">return</span><br>        fn.call(<span class="hljs-built_in">this</span>)<br>        timer = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>            timer = <span class="hljs-literal">null</span><br>        &#125;, delay);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="为什么在react中不能正确使用？"><a href="#为什么在react中不能正确使用？" class="headerlink" title="为什么在react中不能正确使用？"></a>为什么在react中不能正确使用？</h3><p>这里先拿防抖做示例(ts版本)：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn: <span class="hljs-built_in">Function</span>, delay: <span class="hljs-built_in">number</span></span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> timer: NodeJS.Timer | <span class="hljs-literal">null</span> = <span class="hljs-literal">null</span><br>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">if</span> (timer) <span class="hljs-built_in">clearTimeout</span>(timer)<br>    timer = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>      fn.call(<span class="hljs-built_in">this</span>)<br>      timer = <span class="hljs-literal">null</span><br>    &#125;, delay)<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>测试代码如下：</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">const handleClick = debounce(<br>  <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;you click!&#x27;</span>)<br>  &#125;, <span class="hljs-number">1001</span><br>)<br>useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>  <span class="hljs-regexp">//</span> 模拟点击两次<br>  (<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>    handleClick()<br>    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>      handleClick()<br>    &#125;, <span class="hljs-number">1000</span>)<br>  &#125;)()<br>  const t = <span class="hljs-built_in">setInterval</span>(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;1秒过去了&#x27;</span>)<br>  &#125;, <span class="hljs-number">1000</span>);<br>  <span class="hljs-keyword">return</span> () =&gt; &#123;<br>    <span class="hljs-built_in">clearInterval</span>(t)<br>  &#125;<br>&#125;, [])<br></code></pre></td></tr></table></figure>
+<p>可以看到最终正确的在两秒后才打印：<br><img src="/2021/06/13/防抖节流的react-hook版本-工作经验之解决频繁的用户操作带来的问题/%E6%BC%94%E7%A4%BA1.png" srcset="/img/loading.gif" lazyload></p>
+<p>似乎就这样看起来一切正常，下面我换一个用例:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> [counter1, setCounter1] = useState(<span class="hljs-number">0</span>);<br><span class="hljs-keyword">const</span> [counter2, setCounter2] = useState(<span class="hljs-number">0</span>);<br><br><span class="hljs-keyword">const</span> handleClick = debounce(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-built_in">console</span>.count(<span class="hljs-string">&#x27;click1&#x27;</span>)<br>  setCounter1(counter1 + <span class="hljs-number">1</span>)<br>&#125;, <span class="hljs-number">1000</span>)<br><br>useEffect(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">const</span> t = <span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>    setCounter2(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x + <span class="hljs-number">1</span>)<br>  &#125;, <span class="hljs-number">500</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">clearInterval</span>(t)<br>&#125;, [])<br><br><br><span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;&#123;</span> <span class="hljs-attr">padding:</span> <span class="hljs-attr">30</span> &#125;&#125;&gt;</span></span><br><span class="xml">  <span class="hljs-tag">&lt;<span class="hljs-name">button</span></span></span><br><span class="hljs-tag"><span class="xml">    <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;handleClick&#125;</span></span></span><br><span class="hljs-tag"><span class="xml">  &gt;</span>click<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="xml">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>c1:&#123;counter1&#125;c2:&#123;counter2&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+<p>当我快速点击时这时候 控制台的打印：  </p>
+<p><img src="/2021/06/13/防抖节流的react-hook版本-工作经验之解决频繁的用户操作带来的问题/%E6%BC%94%E7%A4%BA2.png" srcset="/img/loading.gif" lazyload>  </p>
+<p>可以看到在我触发组件更新之后，我们的<code>debounce</code>失效了。<br>有人可能会说，使用<code>useCallback</code>缓存一下不就行了，是的我们使用<code>useCallback</code>确实可以解决这个问题，但是我们再一个用例:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs javascript">  <span class="hljs-keyword">const</span> [counter1, setCounter1] = useState(<span class="hljs-number">0</span>);<br>  <span class="hljs-keyword">const</span> [counter2, setCounter2] = useState(<span class="hljs-number">0</span>);<br><br>  <span class="hljs-keyword">const</span> handleClick = useCallback(<br>    debounce(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>      <span class="hljs-built_in">console</span>.count(<span class="hljs-string">&#x27;click1&#x27;</span>)<br>      setCounter1(counter1 + <span class="hljs-number">1</span>)<br>    &#125;, <span class="hljs-number">1000</span>),<br>    [],<br>  )<br><br>  useEffect(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">const</span> t = <span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>      setCounter2(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x + <span class="hljs-number">1</span>)<br>    &#125;, <span class="hljs-number">500</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">clearInterval</span>(t)<br>  &#125;, [])<br><br><br>  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;&#123;</span> <span class="hljs-attr">padding:</span> <span class="hljs-attr">30</span> &#125;&#125;&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span></span></span><br><span class="hljs-tag"><span class="xml">      <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;handleClick&#125;</span></span></span><br><span class="hljs-tag"><span class="xml">    &gt;</span>click<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>c1:&#123;counter1&#125;c2:&#123;counter2&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这里描述一下我的操作：我进行了三次秒内连击5次  </p>
+<p>下面是控制台还有页面:<br><img src="/2021/06/13/防抖节流的react-hook版本-工作经验之解决频繁的用户操作带来的问题/%E6%BC%94%E7%A4%BA3.png" srcset="/img/loading.gif" lazyload>  <img src="/2021/06/13/防抖节流的react-hook版本-工作经验之解决频繁的用户操作带来的问题/%E6%BC%94%E7%A4%BA4.png" srcset="/img/loading.gif" lazyload>   </p>
+<p>虽然控制台看起来是正确的，但是由于闭包问题并不能拿到最新的<code>counter1</code>  </p>
+<p>假如我们把改成:</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs lisp">const handleClick = useCallback(<br>  <span class="hljs-name">debounce</span>(<span class="hljs-name">function</span> () &#123;<br>    console.count(&#x27;click1&#x27;)<br>    setCounter1(<span class="hljs-name">counter1</span> + <span class="hljs-number">1</span>)<br>  &#125;, <span class="hljs-number">1000</span>),<br>  [counter1],<br>)<br></code></pre></td></tr></table></figure>
+<p>这时候假如还要其他地方会使用<code>setCounter1</code>修改<code>counter1</code>时，这时候显然<code>debounce</code>就失效了（<code>counter1</code>变化时，<code>useCallback</code>的<code>callback</code>，这时候<code>timer</code>又不可靠了）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs javascript">  <span class="hljs-keyword">const</span> [counter1, setCounter1] = useState(<span class="hljs-number">0</span>);<br>  <span class="hljs-keyword">const</span> [counter2, setCounter2] = useState(<span class="hljs-number">0</span>);<br><br>  <span class="hljs-keyword">const</span> handleClick = useCallback(<br>    debounce(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>      <span class="hljs-built_in">console</span>.count(<span class="hljs-string">&#x27;click1&#x27;</span>)<br>      setCounter1(counter1 + <span class="hljs-number">1</span>)<br>    &#125;, <span class="hljs-number">1000</span>),<br>    [counter1],<br>  )<br><br>  useEffect(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">const</span> t = <span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>      setCounter2(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x + <span class="hljs-number">1</span>)<br>      setCounter1(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x + <span class="hljs-number">1</span>)<br>    &#125;, <span class="hljs-number">500</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">clearInterval</span>(t)<br>  &#125;, [])<br><br><br>  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&#123;&#123;</span> <span class="hljs-attr">padding:</span> <span class="hljs-attr">30</span> &#125;&#125;&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span></span></span><br><span class="hljs-tag"><span class="xml">      <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;handleClick&#125;</span></span></span><br><span class="hljs-tag"><span class="xml">    &gt;</span>click<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>c1:&#123;counter1&#125;c2:&#123;counter2&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这里的bug不太方便演示，你可以自己测试一下，这里会发生一下闪动。</p>
+<p>这时候又会有人说啦，你使用函数拿到上一轮的counter1更新<code>counter1</code>不就行了:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> handleClick = useCallback(<br>  debounce(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.count(<span class="hljs-string">&#x27;click1&#x27;</span>)<br>    setCounter1(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x + <span class="hljs-number">1</span>)<br>  &#125;, <span class="hljs-number">1000</span>),<br>  [],<br>)<br></code></pre></td></tr></table></figure>
+<p>是的这时候确实是能正确的<code>setCounter1</code>防抖功能又行了，但是我再换个需求呢？</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs lisp">const handleClick = useCallback(<br>  <span class="hljs-name">debounce</span>(<span class="hljs-name">function</span> () &#123;<br>    console.count(&#x27;click1&#x27;)<br>    setCounter1(<span class="hljs-name">x</span> =&gt; x + <span class="hljs-number">1</span>)<br>    setCounter2(<span class="hljs-name">counter1</span> + <span class="hljs-number">1</span>)<br>  &#125;, <span class="hljs-number">1000</span>),<br>  [],<br>)<br></code></pre></td></tr></table></figure>
+<p>这时候就死局了，如果你写依赖<code>debounce</code>又失效了。  </p>
+<p>如果你对<code>hook</code>比较了解，这时候肯定有一个呼之欲出的<code>hook</code>,没错就是<code>useRef</code>!</p>
+<p><code>useRef</code>生成的<code>ref</code>对象可以保证在所以渲染周期内都不会改变，这样我们就可以把timer绑定在<code>ref</code>上，打造一个可靠的<code>timer</code></p>
+<h2 id="使用useRef打造可靠的防抖节流"><a href="#使用useRef打造可靠的防抖节流" class="headerlink" title="使用useRef打造可靠的防抖节流"></a>使用useRef打造可靠的防抖节流</h2><p>这里直接上代码！</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useDebounceFn</span>(<span class="hljs-params">func: <span class="hljs-built_in">Function</span>, delay: <span class="hljs-built_in">number</span>, immediate: <span class="hljs-built_in">boolean</span></span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> &#123; current &#125; = useRef&lt;&#123; <span class="hljs-attr">timer</span>: NodeJS.Timeout | <span class="hljs-literal">null</span> &#125;&gt;(&#123; <span class="hljs-attr">timer</span>: <span class="hljs-literal">null</span> &#125;),<br>    <span class="hljs-attr">result</span>: unknown;<br>  <span class="hljs-keyword">const</span> resDebounced = <span class="hljs-function">(<span class="hljs-params">...args: unknown[]</span>) =&gt;</span> &#123;<br>    <span class="hljs-comment">// 一直触发一直清除上一个打开的延时器</span><br>    <span class="hljs-keyword">if</span> (current.timer) <span class="hljs-built_in">clearTimeout</span>(current.timer);<br><br>    <span class="hljs-keyword">if</span> (immediate) &#123;<br>      <span class="hljs-comment">// 第一次触发，timeout===undefined恰好可以利用timeout的值</span><br>      <span class="hljs-keyword">const</span> callNow = !current.timer;<br>      current.timer = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>        current.timer = <span class="hljs-literal">null</span>;<br>      &#125;, delay);<br>      <span class="hljs-keyword">if</span> (callNow) result = func.apply(<span class="hljs-literal">null</span>, args);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-comment">// 停止触发，只有最后一个延时器被保留</span><br>      current.timer = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>        current.timer = <span class="hljs-literal">null</span>;<br>        <span class="hljs-comment">// func绑定this和事件对象event，还差一个函数返回值</span><br>        result = func.apply(<span class="hljs-literal">null</span>, args);<br>      &#125;, delay);<br>    &#125;<br>    <span class="hljs-keyword">return</span> result;<br>  &#125;;<br>  resDebounced.cancel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">if</span> (current.timer) <span class="hljs-built_in">clearTimeout</span>(current.timer);<br>    current.timer = <span class="hljs-literal">null</span>;<br>  &#125;;<br>  <span class="hljs-keyword">return</span> resDebounced;<br>&#125;<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> useDebounceFn;<br><br></code></pre></td></tr></table></figure>
+<p>节流就留给聪明的你写吧！</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>由于<code>react-hook</code>的更新机制，每次更新都会反复重新执行，因此每次渲染都是一个新的闭包，在这样的场景下,常规的js版本防抖节流会变得不可靠，甚至失效。因此我们需要依赖<code>react</code>的可靠不变<code>useRef</code>挂载一个可靠的<code>timer</code>，实现防抖和节流。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%B7%A5%E4%BD%9C%E7%BB%8F%E9%AA%8C/">工作经验</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/">经验分享</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%8A%82%E6%B5%81%E9%98%B2%E6%8A%96/">节流防抖</a>
+                    
+                      <a class="hover-with-bg" href="/tags/useRef/">useRef</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%97%AD%E5%8C%85%E9%99%B7%E8%BF%9B/">闭包陷进</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/11/01/React%E5%8E%9F%E7%90%86%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">React原理源码系统性学习心得--React原理系列</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/08/%E5%90%8E%E7%AB%AF%E5%90%8C%E4%BA%8B%E6%94%B9%E4%BA%86%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%88%91%E4%BA%94%E5%88%86%E9%92%9F%E5%88%B7%E6%96%B0%E4%B8%80%E6%AC%A1%E3%80%82%E3%80%82%E3%80%82-C%E7%AB%AF%E7%99%BB%E5%BD%95%E8%AE%BE%E8%AE%A1/">
+                        <span class="hidden-mobile">后端同事改了登录接口导致我五分钟刷新一次。。。--工作经验之用户登录设计</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
