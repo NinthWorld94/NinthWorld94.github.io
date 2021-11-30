@@ -1,0 +1,512 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="笔者之前遇了好几处需要处理文件流的场景，以及互相转换，这边深入的学习了一下它们的概念，区别以及互相转换，阅读本文你将了解前端常见的文件流格式，以及相互转换的思路。">
+  <meta name="author" content="NinthWorld">
+  <meta name="keywords" content="前端,JavaScript,编程,React,算法,Vue,框架,学习,生活,随笔">
+  <meta name="description" content="笔者之前遇了好几处需要处理文件流的场景，以及互相转换，这边深入的学习了一下它们的概念，区别以及互相转换，阅读本文你将了解前端常见的文件流格式，以及相互转换的思路。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端文件流处理--工作经验分享">
+<meta property="og:url" content="git://ninthworld94.github.io/2021/08/01/前端文件流处理-工作经验分享/index.html">
+<meta property="og:site_name" content="NinthWorld的博客">
+<meta property="og:description" content="笔者之前遇了好几处需要处理文件流的场景，以及互相转换，这边深入的学习了一下它们的概念，区别以及互相转换，阅读本文你将了解前端常见的文件流格式，以及相互转换的思路。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-01T15:17:39.000Z">
+<meta property="article:modified_time" content="2021-08-01T15:17:39.000Z">
+<meta property="article:author" content="NinthWorld">
+<meta property="article:tag" content="经验分享">
+<meta property="article:tag" content="前端文件流">
+<meta property="article:tag" content="文件流格式转换">
+<meta property="article:tag" content="Blob">
+<meta property="article:tag" content="File">
+<meta property="article:tag" content="ArrayBuffer">
+<meta property="article:tag" content="Base64">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>前端文件流处理--工作经验分享 - NinthWorld的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"ninthworld94.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>天道酬勤</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://rmt.dogedoge.com/fetch/fluid/storage/bg/73twhs.png?w=1920&fmt=webp') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="前端文件流处理--工作经验分享">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-01 23:17" pubdate>
+        2021年8月1日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">前端文件流处理--工作经验分享</h1>
+            
+            <div class="markdown-body">
+              <p>笔者之前遇了好几处需要处理文件流的场景，以及互相转换，这边深入的学习了一下它们的概念，区别以及互相转换，阅读本文你将了解前端常见的文件流格式，以及相互转换的思路。</p>
+<span id="more"></span>
+<h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h2><h3 id="File"><a href="#File" class="headerlink" title="File"></a>File</h3><p>一般情况之下<code>File</code>对象是<code>input</code>标签选择文件之后的<code>FileList</code>对象，也可以是也可以是来自由拖放操作生成的 <code>DataTransfer</code> 对象，或者来自 <code>HTMLCanvasElement</code> 上的 <code>mozGetAsFile() API</code>。</p>
+<p><code>File</code>是特殊的<code>Blob</code>，可以处理<code>Blob</code>的函数必然可以处理<code>Blob</code>，比如说， <code>FileReader</code>, <code>URL.createObjectURL()</code>, <code>createImageBitmap() (en-US)</code>, 及 <code>XMLHttpRequest.send()</code> 都能处理 <code>Blob</code>和 <code>File</code>。</p>
+<p><strong>总结:<code>File</code>是一个特殊的<code>Blob</code>对象。具体<code>API</code>参见MDN File</strong></p>
+<h3 id="Base64"><a href="#Base64" class="headerlink" title="Base64"></a>Base64</h3><p><code>Base64</code>是一种由<code>64</code>个可打印字符组成的对二进制编码的规则<code>（binary-to-text）</code></p>
+<h4 id="Base64解决了什么问题？"><a href="#Base64解决了什么问题？" class="headerlink" title="Base64解决了什么问题？"></a>Base64解决了什么问题？</h4><p><code>Base64</code>就是为了解决各系统以及传输协议中二进制不兼容的问题而生的。为什么<code>Base64</code>能实现兼容呢？主要还是因为各家系统只能保证<code>ASIIC</code>的基础字符，所以<code>Base64</code>就是取了其中的64个 参见<code>MDN Base64</code>。</p>
+<p><code>Base64</code>的算法：</p>
+<ul>
+<li><p>1.将原始数据每三个字节作为一组，每个字节是8个bit，所以一共是 24 个 bit</p>
+</li>
+<li><p>2.将 24 个 bit 分为四组，每组 6 个 bit</p>
+</li>
+<li><p>3.在每组前面加补 00，将其补全成四组8个bit，到此步，原生数据的3个字节已经变成4个字节了，增大了将近30%</p>
+</li>
+<li><p>4.根据Base64码表得到扩展后每个字节的对应符号</p>
+</li>
+</ul>
+<p>exp：原文为：Man的解码过程</p>
+<p><strong>小tips：</strong></p>
+<blockquote>
+<p>关于Base64结尾的’=‘，而且有时候是一个有时候是两个，这是因为base64是以三个字符为一组，所以当不满三个的时候就会用’=‘补，缺一个补一个’=‘，缺两个补两个’=’。</p>
+</blockquote>
+<p>其实在实际开发中，我们得到的是DataURL前面一般会有<code>data:image/jpeg;base64</code>,需要注意的是,之后的才是真正的数据。</p>
+<h3 id="Blob"><a href="#Blob" class="headerlink" title="Blob"></a>Blob</h3><p><code>Blob</code>是一个表示不可变，原始数据的文件对象，它的数据可以按文本或者二进制的格式进行读取，也可以转换成 <code>ReadableStream</code> 来用于数据操作。 具体API参见<code>MDN Blob</code></p>
+<p>可以用<code>Blob</code>实现对大文件进行分片上传。</p>
+<h3 id="ArrayBuffer"><a href="#ArrayBuffer" class="headerlink" title="ArrayBuffer"></a>ArrayBuffer</h3><p><code>ArrayBuffer</code> 对象用来表示通用的、固定长度的原始二进制数据缓冲区。</p>
+<p>它是一个字节数组，通常在其他语言中称为<code>“byte array”</code>。</p>
+<p>而<code>ArrayBuffer</code> 的内容不能直接被操作 ，而是要通过类型数组对象或 <code>DataView</code> 对象来操作，将缓冲区中的数据表示为特定的格式，并通过这些格式来读写缓冲区的内容。</p>
+<h2 id="2-互相转换"><a href="#2-互相转换" class="headerlink" title="2.互相转换"></a>2.互相转换</h2><p>在日常开发中我们经常遇到一些api或者组件对文件类型有要求，只这时候就需要对这些文件类型进行转化。</p>
+<p>在这在之前先介绍一下一个<code>JS BOM API  FileReader</code></p>
+<p><code>FileReader</code>可以读取<code>Blob</code>对象所以同时也能读取<code>File</code>对象，并且<code>FileReader</code>提供了输出<code>ArrayBuffer</code> <code>Base64</code>的接口。</p>
+<p>下面直接贴一些转换代码：</p>
+<p><strong>File转Base64：</strong></p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> reader = <span class="hljs-keyword">new</span> <span class="hljs-constructor">FileReader()</span>;<br>reader.read<span class="hljs-constructor">AsDataURL(<span class="hljs-params">file</span>[0])</span><br>console.log(reader)<br></code></pre></td></tr></table></figure>
+
+<p><strong>Base64转Blob：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> dataURItoBlob = <span class="hljs-function">(<span class="hljs-params">dataURI</span>) =&gt;</span> &#123;  <br>    <span class="hljs-keyword">var</span> byteString = atob(dataURI.split(<span class="hljs-string">&#x27;,&#x27;</span>)[<span class="hljs-number">1</span>]);  <br>    <span class="hljs-keyword">var</span> mimeString = dataURI.split(<span class="hljs-string">&#x27;,&#x27;</span>)[<span class="hljs-number">0</span>].split(<span class="hljs-string">&#x27;:&#x27;</span>)[<span class="hljs-number">1</span>].split(<span class="hljs-string">&#x27;;&#x27;</span>)[<span class="hljs-number">0</span>];  <br>    <span class="hljs-keyword">var</span> ab = <span class="hljs-keyword">new</span> <span class="hljs-built_in">ArrayBuffer</span>(byteString.length);  <br>    <span class="hljs-keyword">var</span> ia = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Uint8Array</span>(ab);  <br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; byteString.length; i++) &#123;  <br>        ia[i] = byteString.charCodeAt(i);  <br>    &#125;  <br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Blob([ab], &#123;<span class="hljs-attr">type</span>: mimeString&#125;);  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>Blob转ArrayBuffer：</strong></p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> blob = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Blob([1,2,3,4])</span><br><span class="hljs-keyword">let</span> reader = <span class="hljs-keyword">new</span> <span class="hljs-constructor">FileReader()</span>;<br>reader.onload = <span class="hljs-keyword">function</span>(result) &#123;<br>    console.log(result);<br>&#125;<br>reader.read<span class="hljs-constructor">AsArrayBuffer(<span class="hljs-params">blob</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<p><strong>Buffer转Blob：</strong></p>
+<p><code>let blob = new Blob([buffer])</code></p>
+<p><strong>Base64转File:</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">const</span> base64ConvertFile = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">urlData, filename</span>) </span>&#123;<br>	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> urlData != <span class="hljs-string">&#x27;string&#x27;</span>) &#123;<br>		<span class="hljs-keyword">return</span>;<br>	&#125;<br>	<span class="hljs-keyword">var</span> arr = urlData.split(<span class="hljs-string">&#x27;,&#x27;</span>)<br>	<span class="hljs-keyword">var</span> <span class="hljs-keyword">type</span> = arr[<span class="hljs-number">0</span>].match(<span class="hljs-regexp">/:(.*?);/</span>)[<span class="hljs-number">1</span>]<br>	<span class="hljs-keyword">var</span> fileExt = <span class="hljs-keyword">type</span>.split(<span class="hljs-string">&#x27;/&#x27;</span>)[<span class="hljs-number">1</span>]<br>	<span class="hljs-keyword">var</span> bstr = atob(arr[<span class="hljs-number">1</span>])<br>	<span class="hljs-keyword">var</span> n = bstr.length<br>	<span class="hljs-keyword">var</span> u8arr = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Uint8Array</span>(n)<br>	<span class="hljs-keyword">while</span> (n--) &#123;<br>		u8arr[n] = bstr.charCodeAt(n);<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> File([u8arr], <span class="hljs-string">&#x27;filename.&#x27;</span> + fileExt, &#123;<br>		<span class="hljs-attr">type</span>: <span class="hljs-keyword">type</span><br>	&#125;);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><p>前端常见的文件流格式有<code>Blob</code> <code>File</code> <code>Base64</code> <code>ArrayBuffer</code>，其中<code>File</code>是特殊的<code>Blob</code>对象,大部分转换都可以通过<code>JS BOM API  FileReader</code>实现。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%B7%A5%E4%BD%9C%E7%BB%8F%E9%AA%8C/">工作经验</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/">经验分享</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%89%8D%E7%AB%AF%E6%96%87%E4%BB%B6%E6%B5%81/">前端文件流</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%96%87%E4%BB%B6%E6%B5%81%E6%A0%BC%E5%BC%8F%E8%BD%AC%E6%8D%A2/">文件流格式转换</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Blob/">Blob</a>
+                    
+                      <a class="hover-with-bg" href="/tags/File/">File</a>
+                    
+                      <a class="hover-with-bg" href="/tags/ArrayBuffer/">ArrayBuffer</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Base64/">Base64</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/11/01/React%E5%8E%9F%E7%90%86%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">React原理源码系统性学习心得--React原理系列</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/13/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81%E7%9A%84react-hook%E7%89%88%E6%9C%AC-%E5%B7%A5%E4%BD%9C%E7%BB%8F%E9%AA%8C%E4%B9%8B%E8%A7%A3%E5%86%B3%E9%A2%91%E7%B9%81%E7%9A%84%E7%94%A8%E6%88%B7%E6%93%8D%E4%BD%9C%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98/">
+                        <span class="hidden-mobile">防抖节流的react-hook版本--工作经验之解决频繁的用户操作带来的问题</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
